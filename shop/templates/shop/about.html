@@ -1,0 +1,398 @@
+{% extends 'shop/basic.html' %} 
+
+
+
+
+{% block title%} About Us{% endblock %}
+{% block body%} 
+
+
+<title>About Us | My Awesome Cart - India's Largest Online Marketplace</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #ff9900;
+            --secondary-color: #232f3e;
+            --text-color: #333;
+            --light-gray: #f3f3f3;
+            --white: #ffffff;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Amazon Ember', Arial, sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .about-header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://example.com/warehouse-image.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .about-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .about-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Main Content Styles */
+        .about-section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--secondary-color);
+            font-size: 2rem;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .about-text, .about-image {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Mission/Vision Section */
+        .mission-vision {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .mission, .vision {
+            flex: 1;
+            min-width: 300px;
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .mission h3, .vision h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Team Section */
+        .team {
+            background: var(--light-gray);
+            padding: 60px 0;
+        }
+        
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .team-member {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+        
+        .member-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .member-info {
+            padding: 20px;
+        }
+        
+        .member-info h3 {
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+        
+        .member-info p {
+            color: var(--primary-color);
+            font-style: italic;
+        }
+        
+        /* Stats Section */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 40px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            min-width: 200px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 0;
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .contact-method {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .contact-method i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .contact-method h3 {
+            margin-bottom: 15px;
+        }
+        
+        /* Footer */
+        .about-footer {
+            background: #131a22;
+            color: var(--white);
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            
+            .about-header p {
+                font-size: 1rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .mission-vision {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    
+    <!-- Header Section -->
+    <header class="about-header">
+        <div class="container">
+            <h1>About My Awesome Cart</h1>
+            <p>India's most customer-centric company, where you can find just about anything you want to buy online</p>
+        </div>
+    </header>
+    
+    <!-- Our Story Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">Our Story</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Founded in 2010, My Awesome Cart started as a small online bookstore with a big vision. Today, we're India's largest online marketplace and most trusted brand, serving millions of customers across the country.</p>
+                    <p>What makes us different is our obsessive focus on customer satisfaction. We work tirelessly to provide the best prices, fastest deliveries, and most seamless shopping experience possible.</p>
+                    <p>From humble beginnings in a garage to becoming a household name, our journey has been fueled by innovation, customer trust, and an unwavering commitment to excellence.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://3.imimg.com/data3/AW/GA/MY-12190829/big-office-interior-design.jpg" alt="ShopEasy Office">
+                </div>
+            </div>
+            
+            <div class="mission-vision">
+                <div class="mission">
+                    <h3>Our Mission</h3>
+                    <p>To be Earth's most customer-centric company, where customers can find and discover anything they might want to buy online, and endeavors to offer its customers the lowest possible prices.</p>
+                </div>
+                <div class="vision">
+                    <h3>Our Vision</h3>
+                    <p>To build the future of commerce in India by creating a platform that empowers businesses of all sizes to reach millions of customers while providing an exceptional shopping experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">By The Numbers</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">50M+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Products Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15K+</div>
+                    <div class="stat-label">Seller Partners</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Cities Served</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Team Section -->
+    <section class="team">
+        <div class="container">
+            <h2 class="section-title">Meet Our Leadership</h2>
+            <div class="team-members">
+                <div class="team-member">
+                    <img src="https://www.shutterstock.com/shutterstock/photos/2547011513/display_1500/stock-photo-successful-busy-professional-business-man-working-on-computer-sitting-at-desk-2547011513.jpg" alt="CEO" class="member-image">
+                    <div class="member-info">
+                        <h3>Rahul Sharma</h3>
+                        <p>Founder & CEO</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="https://media.licdn.com/dms/image/v2/D4D12AQFsDi5uwfksNw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1709886187105?e=2147483647&v=beta&t=2yvFUrZTAsrWheOGZQ2NK0yxiH42JeizuEMdwZUkpgg" alt="CTO" class="member-image">
+                    <div class="member-info">
+                        <h3>Priya Patel</h3>
+                        <p>Chief Technology Officer</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="https://futurestartup.com/wp-content/uploads/2019/05/Yasir-Azman.jpg" alt="CMO" class="member-image">
+                    <div class="member-info">
+                        <h3>Arjun Mehta</h3>
+                        <p>Chief Marketing Officer</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="https://static-www.adweek.com/wp-content/uploads/2022/04/conny-unilever-no-cmo-2022.jpg?w=800" alt="COO" class="member-image">
+                    <div class="member-info">
+                        <h3>Neha Gupta</h3>
+                        <p>Chief Operations Officer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Customer Care</h3>
+                    <p>1800 123 4567</p>
+                    <p>Mon-Sun: 7AM-11PM</p>
+                </div>
+                <div class="contact-method">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email Us</h3>
+                    <p>support@myawesomecart.com</p>
+                    <p>care@myawesomecart.com</p>
+                </div>
+                <div class="contact-method">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Headquarters</h3>
+                    <p>MAC Tower,</p>
+                    <p>Bangalore - 560001</p>
+                    <p>Karnataka, India</p>
+                </div>
+                <div class="contact-method">
+                    <i class="fas fa-comments"></i>
+                    <h3>Social Media</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="about-footer">
+        <div class="container">
+            <p>&copy; 2023 My Awesome Cart. All Rights Reserved.</p>
+            <p>Committed to delivering happiness to your doorstep.</p>
+        </div>
+    </footer>
+</body>
+
+{% endblock%}

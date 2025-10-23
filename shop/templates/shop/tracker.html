@@ -1,0 +1,333 @@
+{% extends 'shop/basic.html' %}
+{% block title%} Track Order - My Awesome Cart{% endblock %}
+
+{% block css %}
+<style>
+    .tracking-container {
+        background-color: #f7f7f7;
+        padding: 40px 0;
+        min-height: 70vh;
+    }
+    .tracking-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    .tracking-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .tracking-icon {
+        font-size: 48px;
+        color: #4f46e5;
+        margin-bottom: 15px;
+    }
+    .tracking-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .tracking-input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .tracking-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+    .tracking-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        outline: none;
+    }
+    .tracking-btn {
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    .tracking-btn:hover {
+        background-color: #3730a3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .tracking-result {
+        display: none;
+        margin-top: 40px;
+        text-align: center;
+        animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .status-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+    .status-confirmed {
+        color: #10b981;
+    }
+    .status-shipped {
+        color: #3b82f6;
+    }
+    .status-out {
+        color: #f59e0b;
+    }
+    .status-delivered {
+        color: #8b5cf6;
+    }
+    .tracking-timeline {
+        margin: 40px auto;
+        max-width: 600px;
+        position: relative;
+    }
+    .timeline-progress {
+        height: 4px;
+        background: #e5e7eb;
+        position: absolute;
+        top: 16px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+    .timeline-progress-bar {
+        height: 100%;
+        background: #4f46e5;
+        width: 0%;
+        transition: width 1s ease-in-out;
+    }
+    .timeline-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 2;
+    }
+    .timeline-step {
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 4px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #9ca3af;
+    }
+    .timeline-step.active {
+        border-color: #4f46e5;
+        background: #4f46e5;
+        color: white;
+    }
+    .timeline-step.completed {
+        border-color: #10b981;
+        background: #10b981;
+        color: white;
+    }
+    .timeline-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    .timeline-label {
+        font-size: 12px;
+        color: #6b7280;
+        text-align: center;
+        width: 80px;
+        margin-left: -20px;
+    }
+    .order-details {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 30px;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    .support-section {
+        margin-top: 40px;
+        text-align: center;
+    }
+    .support-card {
+        background: #f0f9ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="tracking-container">
+    <div class="container">
+        <div class="tracking-card">
+            <div class="tracking-header">
+                <div class="tracking-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h2>Track Your Order</h2>
+                <p class="text-muted">Enter your order ID to check the current status of your delivery</p>
+            </div>
+            
+            <div class="tracking-form">
+                <div class="tracking-input-group">
+                    <input type="text" class="tracking-input" id="order-id-input" placeholder="Enter your Order ID (e.g. AWCMY12345)" required>
+                </div>
+                <button class="tracking-btn" id="track-order-btn">
+                    <i class="fas fa-search mr-2"></i> Track Order
+                </button>
+            </div>
+            
+            <div class="tracking-result" id="tracking-result">
+                <div class="status-icon status-confirmed">
+                    <i class="fas fa-truck-loading"></i>
+                </div>
+                <h3>Your Order Is On The Way!</h3>
+                <p class="lead">Your item will be delivered soon</p>
+                
+                <div class="tracking-timeline">
+                    <div class="timeline-progress">
+                        <div class="timeline-progress-bar" id="timeline-progress" style="width: 75%;"></div>
+                    </div>
+                    <div class="timeline-steps">
+                        <div class="timeline-step completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-step completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-step active">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="timeline-step">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </div>
+                    <div class="timeline-labels">
+                        <div class="timeline-label">Order Confirmed</div>
+                        <div class="timeline-label">Processing</div>
+                        <div class="timeline-label">Shipped</div>
+                        <div class="timeline-label">Delivered</div>
+                    </div>
+                </div>
+                
+                <div class="order-details">
+                    <h4 class="mb-3">Order Details</h4>
+                    <div class="detail-row">
+                        <span>Order ID:</span>
+                        <span id="detail-order-id">AWCMY12345</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Order Date:</span>
+                        <span id="detail-order-date">September 12, 2023</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Estimated Delivery:</span>
+                        <span id="detail-delivery-date">September 15, 2023</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Shipping Address:</span>
+                        <span id="detail-address">123 Main St, City, State 12345</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Contact:</span>
+                        <span id="detail-contact">+1 (123) 456-7890</span>
+                    </div>
+                </div>
+                
+                <div class="support-section">
+                    <p>Need help with your order?</p>
+                    <div class="support-card">
+                        <h5><i class="fas fa-headset mr-2"></i>Customer Support</h5>
+                        <p>Call us at <strong>1-800-AWESOME</strong> or email <strong>support@myawesomecart.com</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+    // Check if order ID is passed in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id');
+    if (orderId) {
+        $('#order-id-input').val(orderId);
+        trackOrder();
+    }
+    
+    // Track order when button is clicked
+    $('#track-order-btn').click(function() {
+        trackOrder();
+    });
+    
+    // Also track when Enter is pressed in the input field
+    $('#order-id-input').keypress(function(e) {
+        if (e.which == 13) {
+            trackOrder();
+            return false;
+        }
+    });
+    
+    function trackOrder() {
+        const orderId = $('#order-id-input').val().trim();
+        
+        if (!orderId) {
+            alert('Please enter your order ID');
+            return;
+        }
+        
+        // In a real application, you would make an API call here
+        // For this demo, we'll simulate a successful tracking result
+        
+        // Show loading state
+        $('#track-order-btn').html('<i class="fas fa-spinner fa-spin mr-2"></i> Tracking...');
+        
+        // Simulate API call delay
+        setTimeout(function() {
+            // Update order details with the entered ID
+            $('#detail-order-id').text(orderId);
+            
+            // Show the tracking result with animation
+            $('#tracking-result').fadeIn(800);
+            
+            // Reset button
+            $('#track-order-btn').html('<i class="fas fa-search mr-2"></i> Track Order');
+            
+            // Scroll to results
+            $('html, body').animate({
+                scrollTop: $('#tracking-result').offset().top - 100
+            }, 1000);
+        }, 1500);
+    }
+    
+    // Initialize the progress bar animation
+    setTimeout(function() {
+        $('#timeline-progress').css('width', '75%');
+    }, 500);
+});
+</script>
+{% endblock %}

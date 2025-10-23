@@ -1,0 +1,511 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title%} {{product.product_name}} - My Awesome Cart{% endblock %}
+
+{% block css %}
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary: #f59e0b;
+    --dark: #1f2937;
+    --light: #f9fafb;
+    --gray: #6b7280;
+    --success: #10b981;
+}
+
+.product-detail-container {
+    padding: 2rem 0;
+}
+
+.product-detail-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.product-image-section {
+    position: relative;
+    padding: 2rem;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-main-image {
+    max-width: 100%;
+    height: 400px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.product-info-section {
+    padding: 2rem;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.product-category {
+    color: var(--gray);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.product-price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.product-description {
+    color: var(--dark);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.product-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    flex: 1;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.quantity-label {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid var(--primary);
+    background: white;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.quantity-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: center;
+}
+
+.product-features {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark);
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.feature-icon {
+    margin-right: 0.75rem;
+    color: var(--success);
+    font-weight: bold;
+}
+
+/* Cart Popover Styles */
+.popover {
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+}
+
+.popover-header {
+    background-color: var(--primary);
+    color: white;
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+}
+
+.popover-body {
+    padding: 1rem;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.cart-item-qty {
+    margin: 0 0.5rem;
+    font-weight: 600;
+}
+
+.cart-total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.cart-buttons .btn {
+    flex: 1;
+}
+
+/* Toast animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--success);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .product-actions {
+        flex-direction: column;
+    }
+    
+    .btn-lg {
+        width: 100%;
+    }
+    
+    .product-main-image {
+        height: 300px;
+    }
+    
+    .product-title {
+        font-size: 1.5rem;
+    }
+    
+    .popover {
+        max-width: 300px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body%} 
+<div class="container product-detail-container">
+    <div class="product-detail-card">
+        <div class="row">
+            <!-- Product Image Section -->
+            <div class="col-md-6">
+                <div class="product-image-section">
+                    <img src="/media/{{product.image}}" class="product-main-image" alt="{{product.product_name}}">
+                </div>
+            </div>
+            
+            <!-- Product Info Section -->
+            <div class="col-md-6">
+                <div class="product-info-section">
+                    <div class="product-category">{{product.category}}</div>
+                    <h1 class="product-title">{{product.product_name}}</h1>
+                    <div class="product-price">₹{{product.price}}</div>
+                    
+                    <div class="product-description">
+                        {{product.desc}}
+                    </div>
+                    
+                    <!-- Quantity Selector -->
+                    <div class="quantity-selector">
+                        <span class="quantity-label">Quantity:</span>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <span class="quantity-value" id="productQuantity">1</span>
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button class="btn btn-primary btn-lg buy-now">Buy Now</button>
+                        <button id="pr{{product.id}}" class="btn btn-outline-primary btn-lg add-to-cart">Add to Cart</button>
+                    </div>
+                    
+                    <!-- Product Features -->
+                    <div class="product-features">
+                        <h3 class="feature-title">Product Features</h3>
+                        <ul class="feature-list">
+                            <li class="feature-item"><span class="feature-icon">✓</span> Free delivery on orders over ₹999</li>
+                            <li class="feature-item"><span class="feature-icon">✓</span> 30-day return policy</li>
+                            <li class="feature-item"><span class="feature-icon">✓</span> 1-year manufacturer warranty</li>
+                            <li class="feature-item"><span class="feature-icon">✓</span> Genuine product guarantee</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+// Initialize cart
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    updateCartCount();
+}
+
+// Update cart count in navbar
+function updateCartCount() {
+    var count = 0;
+    for (var item in cart) {
+        count += cart[item][0];
+    }
+    document.getElementById('cart').innerHTML = count;
+}
+
+// Update Popover
+function updatePopover(cart) {
+    var popStr = "";
+    popStr = popStr + "<div class='popover-header'>Your Cart</div><div class='popover-body'>";
+    var i = 1;
+    var total = 0;
+    
+    for (var item in cart) {
+        popStr = popStr + "<div class='cart-item'>";
+        popStr = popStr + "<span class='cart-item-name'>" + cart[item][1].slice(0, 20) + "...</span>";
+        popStr = popStr + "<span class='cart-item-qty'>Qty: " + cart[item][0] + "</span>";
+        popStr = popStr + "<span>₹" + (cart[item][0] * cart[item][2]) + "</span>";
+        popStr = popStr + "</div>";
+        total += cart[item][0] * cart[item][2];
+        i = i + 1;
+    }
+    
+    if (i === 1) {
+        popStr = popStr + "<p>Your cart is empty</p>";
+    } else {
+        popStr = popStr + "<div class='cart-total'><span>Total:</span><span>₹" + total + "</span></div>";
+        popStr = popStr + "<div class='cart-buttons'>";
+        popStr = popStr + "<a href='/shop/checkout' class='btn btn-primary'>Checkout</a>";
+        popStr = popStr + "<button class='btn btn-outline-danger' onclick='clearCart()'>Clear Cart</button>";
+        popStr = popStr + "</div>";
+    }
+    
+    popStr = popStr + "</div>";
+    
+    $('#popcart').attr('data-content', popStr);
+    
+    // If popover is visible, update it
+    if ($('#popcart').next('.popover').length) {
+        $('#popcart').popover('show');
+    }
+}
+
+// Clear Cart
+function clearCart() {
+    cart = JSON.parse(localStorage.getItem('cart') || '{}');
+    for (var item in cart) {
+        if (document.getElementById('div' + item)) {
+            document.getElementById('div' + item).style.display = 'flex';
+            document.getElementById('controls' + item).style.display = 'none';
+        }
+    }
+    localStorage.clear();
+    cart = {};
+    updateCartCount();
+    updatePopover(cart);
+    $('#popcart').popover('hide');
+    
+    showToast('Cart cleared!');
+}
+
+// Quantity controls
+let quantity = 1;
+
+$('.plus').click(function() {
+    quantity++;
+    $('#productQuantity').text(quantity);
+});
+
+$('.minus').click(function() {
+    if (quantity > 1) {
+        quantity--;
+        $('#productQuantity').text(quantity);
+    }
+});
+
+// Add to Cart functionality
+$('.add-to-cart').click(function() {
+    var idstr = this.id.toString();
+    var name = "{{product.product_name}}";
+    var price = parseInt("{{product.price}}");
+    
+    if (cart[idstr] != undefined) {
+        cart[idstr][0] += quantity;
+    } else {
+        cart[idstr] = [quantity, name, price];
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    updatePopover(cart);
+    showToast('Item added to cart!');
+});
+
+// Buy Now functionality
+$('.buy-now').click(function() {
+    var idstr = "pr{{product.id}}";
+    var name = "{{product.product_name}}";
+    var price = parseInt("{{product.price}}");
+    
+    // Clear cart and add only this item
+    cart = {};
+    cart[idstr] = [quantity, name, price];
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    updatePopover(cart);
+    
+    // Redirect to checkout page
+    window.location.href = '/shop/checkout';
+});
+
+// Show Toast Notification
+function showToast(message) {
+    // Remove existing toasts
+    $('.toast-notification').remove();
+    
+    // Create toast element
+    var toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = message;
+    
+    // Add to page
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(function() {
+        if (toast.parentNode) {
+            document.body.removeChild(toast);
+        }
+    }, 3000);
+}
+
+// Initialize page
+$(document).ready(function() {
+    updateCartCount();
+    updatePopover(cart);
+    
+    // Initialize popover
+    $('#popcart').popover({
+        html: true,
+        placement: 'bottom',
+        trigger: 'click',
+        template: '<div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-body"></div></div>'
+    });
+    
+    // Close popover when clicking outside
+    $(document).on('click', function(e) {
+        if ($(e.target).closest('.popover').length === 0 && 
+            $(e.target).attr('id') !== 'popcart') {
+            $('#popcart').popover('hide');
+        }
+    });
+    
+    // Check if product is already in cart and update UI
+    var productId = "pr{{product.id}}";
+    if (cart[productId] != undefined) {
+        quantity = cart[productId][0];
+        $('#productQuantity').text(quantity);
+    }
+});
+</script>
+{% endblock %}
